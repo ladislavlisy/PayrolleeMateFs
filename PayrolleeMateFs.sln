@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Payrollee.Common", "Payrollee.Common\Payrollee.Common.fsproj", "{5EA2F1B9-B819-4D5D-8700-5AE2EAC4AC17}"
+EndProject
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "TestCommon", "TestCommon\TestCommon.fsproj", "{0D384047-BDE1-434F-B671-5D0A3A1CA63C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0D384047-BDE1-434F-B671-5D0A3A1CA63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D384047-BDE1-434F-B671-5D0A3A1CA63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D384047-BDE1-434F-B671-5D0A3A1CA63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D384047-BDE1-434F-B671-5D0A3A1CA63C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EA2F1B9-B819-4D5D-8700-5AE2EAC4AC17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EA2F1B9-B819-4D5D-8700-5AE2EAC4AC17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EA2F1B9-B819-4D5D-8700-5AE2EAC4AC17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EA2F1B9-B819-4D5D-8700-5AE2EAC4AC17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
