@@ -11,6 +11,13 @@ type MonthPeriod(code: uint32) =
 
     static member TERM_END_FINISHED with get() = 0u
 
+    static member  WEEKSUN_SUNDAY with get() = 0
+
+    static member  WEEKMON_SUNDAY with get() = 7
+
+    static member CreateFromYearAndMonth(year, month) : MonthPeriod = 
+        MonthPeriod(year, month)
+
     static member Empty() : MonthPeriod = 
         MonthPeriod(MonthPeriod.PRESENT)
 
@@ -52,13 +59,13 @@ type MonthPeriod(code: uint32) =
 
     member x.WeekDayOfMonth(dayOrdinal: int) =
         let periodDate = x.DateOfMonth(dayOrdinal)
-        x.DayOfWeekMonToSun(periodDate)
-
-    member x.DayOfWeekMonToSun(periodDate : DateTime) =
         let periodDateCwd = periodDate.DayOfWeek
+        x.DayOfWeekMonToSun(periodDateCwd)
+
+    member x.DayOfWeekMonToSun(periodDateCwd : DayOfWeek) =
         // DayOfWeek Sunday = 0
         // Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4, Friday = 5, Saturday = 6
-        if (periodDateCwd = DayOfWeek.Sunday) then 7 else (int)periodDateCwd
+        if (periodDateCwd = DayOfWeek.Sunday) then MonthPeriod.WEEKMON_SUNDAY else (int)periodDateCwd
 
     member x.Description() = 
         let firstPeriodDay = x.BeginOfMonth()

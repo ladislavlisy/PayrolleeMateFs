@@ -55,4 +55,17 @@ type SeqOfYears(years: uint32[]) =
                     Array.append firstPart [| SpanOfYears(historyFrom, historyUpto); SpanOfYears(x, 0u) |]
 
         let toListInitValue = [| |]
-        x.Milestones |> Array.fold (toListAccumulator) toListInitValue 
+        let history = x.Milestones |> Array.fold (toListAccumulator) toListInitValue 
+
+        let lastHistoryPart: SpanOfYears = Array.get history (history.Length-1)
+
+        match lastHistoryPart.YearUpto with 
+        | 0u ->
+            let firstHistoryPart = history |> Array.filter (fun y -> y.YearUpto <> 0u)
+
+            let historyFrom = lastHistoryPart.YearFrom
+            let historyUpto = lastHistoryPart.YearFrom
+
+            Array.append firstHistoryPart [| SpanOfYears(historyFrom, historyUpto) |]
+        | _ -> history
+
