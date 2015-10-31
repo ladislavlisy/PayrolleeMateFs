@@ -17,6 +17,9 @@ type SpanOfYears(yearFrom, yearUpto) =
     static member CreateFromYearToYear(from, upto) : SpanOfYears =
         SpanOfYears(from, upto)
 
+    static member Empty() : SpanOfYears = 
+        SpanOfYears()
+
     member x.isEqualToInterval(other : SpanOfYears) = 
         x.YearFrom = other.YearFrom && x.YearUpto = other.YearUpto
 

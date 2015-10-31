@@ -41,10 +41,12 @@
   <ItemGroup>
     <Compile Include="Periods\TestMonthPeriod.fs" />
     <Compile Include="Periods\TestSpanOfYears.fs" />
+    <Compile Include="Core\TestSymbolName.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
     <Folder Include="Periods\" />
+    <Folder Include="Core\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Payrollee.Common\Payrollee.Common.fsproj">

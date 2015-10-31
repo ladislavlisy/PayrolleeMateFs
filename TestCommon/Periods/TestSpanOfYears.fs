@@ -32,7 +32,7 @@ type TestSpanOfYears() =
              SpanOfYears(2017u, 2099u)
         |]
 
-        let testIntervalArray = testYearArray.ToYearsIntervalList()
+        let testIntervalArray = testYearArray.YearsIntervalList()
         Assert.AreEqual(expIntervalArray, testIntervalArray)
 
     [<Test>]

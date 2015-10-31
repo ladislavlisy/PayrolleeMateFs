@@ -8,64 +8,34 @@ type SeqOfYears(years: uint32[]) =
 
     static member END_YEAR_INTER with get() = 2099u;
 
-    member x.InitWithYears(years: uint32[]) : uint32[] =
-        let yearCompare(year: uint32) : uint32 = 
-            if year=0u then SeqOfYears.END_YEAR_ARRAY else year
+    static member TransformZeroToUpto(year: uint32) : uint32 =
+        if year = 0u then SeqOfYears.END_YEAR_ARRAY else year
 
-        years |> Array.sortBy yearCompare
+    static member TransformYearsToSpan(yearFrom: uint32, yearUpto: uint32) : SpanOfYears = 
+        let tranUpto = SeqOfYears.TransformZeroToUpto(yearUpto)
+        let spanUpto = if (tranUpto = yearFrom) then tranUpto else ((uint32)(tranUpto - 1u))
+        SpanOfYears(yearFrom, spanUpto)
+
+    member x.InitWithYears(years: uint32[]) : SpanOfYears[] =
+        let sortedYears = years |> Array.sortBy SeqOfYears.TransformZeroToUpto
+        let beginsCount = Math.Max(0, (sortedYears.Length - 1))
+        let beginsYears = Array.sub sortedYears 0 beginsCount
+        let finishCount = Math.Max(0, (sortedYears.Length - 1))
+        let finishYears = Array.sub sortedYears 1 finishCount
+        let sortedZiped = Array.zip beginsYears finishYears
+        sortedZiped |> Array.map (fun (from, upto) -> SeqOfYears.TransformYearsToSpan(from, upto)) 
 
     member x.Milestones with get() = x.InitWithYears(years)
 
+    static member SelectForPeriod(span: SpanOfYears, period: MonthPeriod) : bool = 
+        period.Year >= span.YearFrom && period.Year <= span.YearUpto
+
     member x.YearsIntervalForPeriod(period: MonthPeriod) : SpanOfYears =
-        let forPeriodAccumulator(agr: SpanOfYears) (x: uint32) : SpanOfYears =
-            let intYear = match x with
-                          | 0u -> SeqOfYears.END_YEAR_ARRAY
-                          | _ -> x
-            let intFrom = match period.Year with
-                          | y when y >= intYear -> intYear
-                          | _ -> agr.YearFrom
-            let intUpto = match period.Year with
-                          | y when y < intYear -> 
-                              if agr.YearUpto = 0u then (intYear-1u) else agr.YearUpto
-                          | _ -> agr.YearUpto
-            SpanOfYears(intFrom, intUpto)
+        let spanForPeriod = x.Milestones |> Array.filter (fun span -> SeqOfYears.SelectForPeriod(span, period))
+        match spanForPeriod with
+        | null -> SpanOfYears.Empty()
+        | _ -> spanForPeriod.[0] 
 
-        let forPeriodInitValue = SpanOfYears()
-        x.Milestones |> Array.fold (forPeriodAccumulator) forPeriodInitValue 
-
-    member x.ToYearsIntervalList() : SpanOfYears[] =
-        let toListAccumulator(agr: SpanOfYears[]) (x: uint32) : SpanOfYears[] =
-            let firstPart = agr |> Array.filter (fun y -> y.YearUpto <> 0u)
-
-            match agr.Length with 
-            | 0 -> 
-                Array.append firstPart [| SpanOfYears(x,0u) |]
-            | _ ->    
-                let lastPart = Array.get agr (agr.Length-1)
-                match x with 
-                | 0u -> 
-                    let historyFrom = lastPart.YearFrom
-                    let historyUpto = SeqOfYears.END_YEAR_INTER
-
-                    Array.append firstPart [| SpanOfYears(historyFrom, historyUpto) |]
-                | _ ->
-                    let historyFrom = lastPart.YearFrom
-                    let historyUpto = max (x-1u) historyFrom
-
-                    Array.append firstPart [| SpanOfYears(historyFrom, historyUpto); SpanOfYears(x, 0u) |]
-
-        let toListInitValue = [| |]
-        let history = x.Milestones |> Array.fold (toListAccumulator) toListInitValue 
-
-        let lastHistoryPart: SpanOfYears = Array.get history (history.Length-1)
-
-        match lastHistoryPart.YearUpto with 
-        | 0u ->
-            let firstHistoryPart = history |> Array.filter (fun y -> y.YearUpto <> 0u)
-
-            let historyFrom = lastHistoryPart.YearFrom
-            let historyUpto = lastHistoryPart.YearFrom
-
-            Array.append firstHistoryPart [| SpanOfYears(historyFrom, historyUpto) |]
-        | _ -> history
+    member x.YearsIntervalList() : SpanOfYears[] =
+        Array.copy x.Milestones
 
